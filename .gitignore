@@ -1,0 +1,18 @@
+# Dependencies
+**/[Dd]ependencies/
+**/[Pp]ackages/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+
+# Rider
+.idea/
+
+# User-specific files
+*.DS_Store
