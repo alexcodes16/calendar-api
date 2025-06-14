@@ -1,0 +1,27 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.16",
+    "id": "5dc15953-533e-49b9-a99f-747f53a6b162",
+    "version": "1.0.0",
+    "name": {
+      "short": "Calendar API",
+      "full": "Personal Calendar Management API"
+    },
+    "description": {
+      "short": "API for managing calendar events and finding free time.",
+      "full": "This API allows for creating and managing personal calendar events, adding participants, and using a scheduling algorithm to find available time slots for meetings."
+    },
+    "icons": {
+      "outline": "outline.png",
+      "color": "color.png"
+    },
+    "accentColor": "#FFFFFF",
+    "copilotExtensions": {
+      "plugins": [
+        {
+          "id": "CalendarPlugin",
+          "file": "openapi.json"
+        }
+      ]
+    }
+  }
