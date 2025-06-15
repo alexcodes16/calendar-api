@@ -7,7 +7,15 @@ builder.Services.AddDbContext<CalendarDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<CalendarApi.Services.SchedulingService>();
-builder.Services.AddControllers().AddJsonOptions(options =>
+// This line just adds the controllers
+builder.Services.AddControllers();
+
+// This NEW block sets the JSON options for the whole application
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+{
+    options.SerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+});
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
 });
@@ -32,3 +40,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+public partial class Program { }
