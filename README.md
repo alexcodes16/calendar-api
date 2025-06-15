@@ -10,7 +10,7 @@ A simple Web API for managing a personal calendar, built with .NET 9 as part of 
 * **Smart Scheduling**: A core algorithm to find available time slots for a group of participants within a given time range.
 * **Unit Testing**: The scheduling algorithm is covered by unit tests to ensure its logic is correct.
 * **LLM Integration**: Includes a Copilot-compatible manifest to allow a Large Language Model to interact with the API.
-
+* **Front-End UI**: A simple, clean user interface built with Blazor WebAssembly to display calendar data.
 ## Technologies Used
 
 * .NET 9
@@ -19,6 +19,7 @@ A simple Web API for managing a personal calendar, built with .NET 9 as part of 
 * SQLite
 * xUnit for Testing
 * Swagger/OpenAPI for API documentation
+* Blazor WebAssembly
 
 ## Setup and Running Locally
 
@@ -42,23 +43,25 @@ To get a local copy up and running, follow these simple steps.
     ```sh
     dotnet restore
     ```
-4.  **Apply the database migration:**
-    This command will create the `calendar.db` file with the correct tables.
+4.  **Create the database from the migration:**
+    This command will create the `calendar.db` file in the main folder.
     ```sh
     dotnet ef database update --project CalendarApi
     ```
-5.  **Run the application:**
-    ```sh
-    dotnet run --project CalendarApi
-    ```
-6.  The API will now be running and listening on `http://localhost:5084`.
+5.  **Run the full application:**
+    You will need **two terminal windows** open in the `calendar-api` directory.
 
-## Usage
+    * In **Terminal 1**, run the Backend API:
+        ```sh
+        dotnet run --project CalendarApi
+        ```
+    * In **Terminal 2**, run the Front-End UI:
+        ```sh
+        dotnet run --project CalendarApi.UI
+        ```
+6.  The API will be listening on `http://localhost:5084` and the UI will be available at its own address (usually `http://localhost:5050` or similar - check the terminal output).
 
-Once the application is running, you can explore and interact with the API endpoints by navigating to the Swagger UI in your browser:
-
-[http://localhost:5084/swagger](http://localhost:5084/swagger)
-
+7.  **Open your browser** to the UI's address to see the application.
 ### Main API Endpoints
 
 | Method | Endpoint                                     | Description                               |
