@@ -1,25 +1,22 @@
-using Microsoft.EntityFrameworkCore; 
-using CalendarApi.Data;           
+using Microsoft.EntityFrameworkCore;
+using CalendarApi.Data;
+using CalendarApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddCors(); // Add CORS services
+
+builder.Services.AddScoped<CalendarApi.Services.SchedulingService>();
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+});
 
 builder.Services.AddDbContext<CalendarDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<CalendarApi.Services.SchedulingService>();
-// This line just adds the controllers
-builder.Services.AddControllers();
-
-// This NEW block sets the JSON options for the whole application
-builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
-{
-    options.SerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-});
-builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-});
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -33,11 +30,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
+// This MUST be in the right order
+app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
 public partial class Program { }

@@ -1,0 +1,84 @@
+﻿@page "/"
+@inject HttpClient Http
+@using System.Text.Json.Serialization
+
+<PageTitle>My Calendar</PageTitle>
+
+<h1>My Calendar Events</h1>
+
+@if (events == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Participants</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var evt in events)
+            {
+                <tr>
+                    <td>@evt.Title</td>
+                    <td>@evt.StartTime.ToString("g")</td>
+                    <td>@evt.EndTime.ToString("g")</td>
+                    <td>@(string.Join(", ", evt.Participants.Select(p => p.Name)))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    public class ApiResponse{
+    public List<Event> events { get; set; } = new();
+    }
+    private Event[]? events;
+
+    protected override async Task OnInitializedAsync(){
+    try
+    {
+        var options = new System.Text.Json.JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true 
+        };
+        var url = $"api/v1/events?t={DateTime.Now.Ticks}";
+        Console.WriteLine($"Fetching data from: {url}"); // Debug message
+        var response = await Http.GetFromJsonAsync<ApiResponse>(url, options);
+        if (response != null){
+            events = response.events.ToArray();
+            // This is the most important debug message!
+            Console.WriteLine($"SUCCESS: Received {events.Length} events from API.");
+        }
+        else{
+            Console.WriteLine("ERROR: API response was null.");
+        }
+    }
+    catch (Exception ex){
+        // This will catch any other unexpected errors
+        Console.WriteLine($"EXCEPTION: {ex.Message}");
+    }
+}
+    // We need BOTH models for the UI to understand the data from the API
+    public class Event{
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public List<User> Participants { get; set; } = new();
+    }
+
+    public class User
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+}
